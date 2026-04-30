@@ -1,0 +1,214 @@
+---
+apiVersion: siteconfig.open-cluster-management.io/v1alpha1
+kind: ClusterInstance
+metadata:
+  name: ocp-ztp-01
+  namespace: ocp-ztp-01
+  annotations:
+    siteconfig-converter: from ocp-ztp-01.yaml at 2026-01-16T19:22:18Z
+spec:
+  clusterName: ocp-ztp-01
+  pullSecretRef:
+    name: assisted-deployment-pull-secret
+  clusterImageSetNameRef: img4.18.29-x86-64-appsub
+  sshPublicKey: ssh-rsa sshpublicaparaacesso
+  baseDomain: labredhat.dominio
+  apiVIPs:
+    - 192.168.10.67
+  ingressVIPs:
+    - 192.168.10.68
+  additionalNTPSources:
+    - 192.168.10.10
+  machineNetwork:
+    - cidr: 192.168.10.0/24
+  clusterNetwork:
+    - cidr: 10.128.0.0/14
+      hostPrefix: 23
+  serviceNetwork:
+    - cidr: 172.30.0.0/16
+  networkType: OVNKubernetes
+  platformType: BareMetal
+  extraLabels:
+    ManagedCluster:
+      ztp-teste: ""
+      common: "true"
+      du-profile: latest
+      group-du-3node: ""
+      sites: example-multinode
+  # Desabilitado para testes
+  #extraManifestsRefs:
+  #  - name: extra-manifests-cm
+  clusterType: HighlyAvailable
+  templateRefs:
+    - name: ai-cluster-templates-v1
+      namespace: open-cluster-management
+  nodes:
+    - bmcAddress: redfish-virtualmedia+http://192.168.10.10:8000/redfish/v1/Systems/ocp-ztp-01
+      bmcCredentialsName:
+        name: ocp-ztp-bmh-secret
+      bootMACAddress: 00:50:56:bd:a4:ca
+      rootDeviceHints:
+        deviceName: /dev/sda
+      nodeNetwork:
+        config:
+          dns-resolver:
+            config:
+              search:
+                - labredhat.dominio
+              server:
+                - 192.168.10.11
+          interfaces:
+            - ipv6:
+                enabled: false
+              ipv4:
+                address:
+                  - ip: 192.168.10.228
+                    prefix-length: 24
+                enabled: true
+              name: ens192
+              state: up
+              type: ethernet
+          routes:
+            config:
+              - destination: 0.0.0.0/0
+                next-hop-address: 192.168.10.1
+                next-hop-interface: ens192
+        interfaces:
+          - name: ens192
+            macAddress: 00:50:56:bd:a4:ca
+      nodeLabels:
+        custom-label/parameter1: "true"
+      hostName: ocp-ztp-01.ocp-ztp-01.labredhat.dominio
+      bootMode: UEFI
+      role: master
+      templateRefs:
+        - name: ai-node-templates-v1
+          namespace: open-cluster-management
+    - bmcAddress: redfish-virtualmedia+http://192.168.10.10:8000/redfish/v1/Systems/ocp-ztp-02
+      bmcCredentialsName:
+        name: ocp-ztp-bmh-secret
+      bootMACAddress: 00:50:56:bd:96:87
+      rootDeviceHints:
+        deviceName: /dev/sda
+      nodeNetwork:
+        config:
+          dns-resolver:
+            config:
+              search:
+                - labredhat.dominio
+              server:
+                - 192.168.10.11
+          interfaces:
+            - ipv6:
+                enabled: false
+              ipv4:
+                address:
+                  - ip: 192.168.10.229
+                    prefix-length: 24
+                enabled: true
+              name: ens192
+              state: up
+              type: ethernet
+          routes:
+            config:
+              - destination: 0.0.0.0/0
+                next-hop-address: 192.168.10.1
+                next-hop-interface: ens192
+        interfaces:
+          - name: ens192
+            macAddress: 00:50:56:bd:96:87
+      hostName: ocp-ztp-02.ocp-ztp-01.labredhat.dominio
+      bootMode: UEFI
+      role: master
+      templateRefs:
+        - name: ai-node-templates-v1
+          namespace: open-cluster-management
+    - bmcAddress: redfish-virtualmedia+http://192.168.10.10:8000/redfish/v1/Systems/ocp-ztp-03
+      bmcCredentialsName:
+        name: ocp-ztp-bmh-secret
+      bootMACAddress: 00:50:56:bd:f5:14
+      rootDeviceHints:
+        deviceName: /dev/sda
+      nodeNetwork:
+        config:
+          dns-resolver:
+            config:
+              search:
+                - labredhat.dominio
+              server:
+                - 192.168.10.11
+          interfaces:
+            - ipv6:
+                enabled: false
+              ipv4:
+                address:
+                  - ip: 192.168.10.230
+                    prefix-length: 24
+                enabled: true
+              name: ens192
+              state: up
+              type: ethernet
+          routes:
+            config:
+              - destination: 0.0.0.0/0
+                next-hop-address: 192.168.10.1
+                next-hop-interface: ens192
+        interfaces:
+          - name: ens192
+            macAddress: 00:50:56:bd:f5:14
+      hostName: ocp-ztp-03.ocp-ztp-01.labredhat.dominio
+      bootMode: UEFI
+      role: master
+      templateRefs:
+        - name: ai-node-templates-v1
+          namespace: open-cluster-management
+    # Host worker - 01
+    - bmcAddress: redfish-virtualmedia+http://192.168.10.10:8000/redfish/v1/Systems/ocp-ztp-04
+      bmcCredentialsName:
+        name: ocp-ztp-bmh-secret
+      bootMACAddress: 00:50:56:bd:84:42
+      rootDeviceHints:
+        deviceName: /dev/sda
+      nodeNetwork:
+        config:
+          dns-resolver:
+            config:
+              search:
+                - labredhat.dominio
+              server:
+                - 192.168.10.11
+          interfaces:
+            - ipv6:
+                enabled: false
+              ipv4:
+                address:
+                  - ip: 192.168.10.231
+                    prefix-length: 24
+                enabled: true
+              link-aggregation:
+                mode: active-backup
+                options:
+                  miimon: '100'
+                port:
+                - ens192
+                - ens224
+              name: bond0
+              state: up
+              type: bond
+          routes:
+            config:
+              - destination: 0.0.0.0/0
+                next-hop-address: 192.168.10.1
+                next-hop-interface: bond0
+        interfaces:
+          - name: ens192
+            macAddress: 00:50:56:bd:84:42
+          - name: ens224
+            macAddress: 00:50:56:bd:7e:85
+      hostName: ocp-ztp-04.ocp-ztp-01.labredhat.dominio
+      bootMode: UEFI
+      role: worker
+      templateRefs:
+        - name: ai-node-templates-v1
+          namespace: open-cluster-management
+    
